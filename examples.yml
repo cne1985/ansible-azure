@@ -11,7 +11,7 @@
     - name: Create storage account
       azure_rm_storageaccount:
         resource_group: Testing
-        name: testaccount001
+        name: cetestaccount001
         account_type: Standard_LRS
 
     - name: Create virtual network
