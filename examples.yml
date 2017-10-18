@@ -63,7 +63,7 @@
         storage_container: testvm001
         storage_blob: testvm001.vhd
         admin_username: ceadmin
-        admin_password: P@ssword123!
+        admin_password: P@ssword123!!
         network_interfaces: testnic001
         image:
           offer: CentOS

@@ -7,7 +7,6 @@
       azure_rm_resourcegroup:
         name: Testing
         location: westeurope
-        tags: 
-          test: 1
-          hello: 2
+
+
 
