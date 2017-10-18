@@ -7,6 +7,9 @@
       azure_rm_resourcegroup:
         name: Testing
         location: westeurope
+        tags:
+          testing: testing
+          delete: never
 
 
 
