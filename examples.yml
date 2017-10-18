@@ -59,7 +59,7 @@
         resource_group: Testing
         name: testvm001
         vm_size: Standard_D1
-        storage_account: testaccount001
+        storage_account: cetestaccount001
         storage_container: testvm001
         storage_blob: testvm001.vhd
         admin_username: admin
