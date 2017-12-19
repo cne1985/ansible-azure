@@ -1,0 +1,91 @@
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    var_resourcegroup: ce_rgroup
+    var_location: westeurope
+    var_publicip: ce_publicip
+    var_vnet: ce_vnet
+    var_subnet: ce_subnet
+    var_nsg: ce_secgroup
+    var_loadbalancer: ce_loadbalancer
+    var_availset: ce_availset
+  tasks:
+    - name: Create a resource group
+      azure_rm_resourcegroup:
+        name: "{{ var_resourcegroup }}"
+        location: "{{ var_location }}"
+        tags:
+          state: live 
+          delete: never
+
+    - name: Create a virtual network
+      azure_rm_virtualnetwork:
+        name: "{{ var_vnet }}"
+        resource_group: "{{ var_resourcegroup }}"
+        location: "{{ var_location }}"
+        address_prefixes_cidr: 
+          - "10.1.0.0/16"
+        state: present
+    
+    - name: Create a subnet
+      azure_rm_subnet:
+        name: "{{ var_subnet }}"
+        resource_group: "{{ var_resourcegroup }}"
+        virtual_network_name: "{{ var_vnet }}"
+        address_prefix_cidr: "10.1.0.0/24"
+
+    - name: Create the network security group
+      azure_rm_securitygroup:
+        name: "{{ var_nsg }}"
+        resource_group: "{{ var_resourcegroup }}"
+        rules:
+          - name: SSH
+            protocol: Tcp
+            destination_port_range: 22
+            access: Allow
+            priority: 1001
+            direction: Inbound
+    
+    - name: Create Public IP for the load balancer
+      azure_rm_publicipaddress:
+        name: "{{ var_publicip }}"
+        resource_group: "{{ var_resourcegroup }}"
+        location: "{{ var_location }}"
+        allocation_method: Static
+        state: present
+
+    - name: Create load balancer
+      azure_rm_loadbalancer:
+        resource_group: "{{ var_resourcegroup }}"
+        name: "{{ var_loadbalancer }}"
+        location: "{{ var_location }}"
+        public_ip: "{{ var_publicip }}"
+        # healthprobe name
+        # backend pool name
+        load_distribution: Default
+        frontend_port: 80
+        probe_protocol: Tcp
+        probe_port: 80
+        probe_interval: 10
+        probe_fail_count: 3
+        state: present
+
+    - name: Create an availabilty set 
+      azure_rm_availabilityset:
+        name: "{{ var_availset }}"
+        resource_group: "{{ var_resourcegroup }}"
+        location: "{{ var_location }}"
+        platform_update_domain_count: 1
+        platform_fault_domain_count: 1
+        sku: Aligned
+        state: present
+
+    # create the vms and add them to availabity set and lb pool
+
+        
+
+    
+
+
+    
